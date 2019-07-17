@@ -1,0 +1,19 @@
+block vars
+nav
+  ul
+    li
+      a(href=pages.content_a.url)
+        img(src=image_path+"/shared/nav_content_a.png", alt=pages.content_a.name)
+    li
+      a(href=pages.content_b.url)
+        img(src=image_path+"/shared/nav_content_b.png", alt=pages.content_b.name)
+    li
+      a(href=pages.content_c.url)
+        img(src=image_path+"/shared/nav_content_c.png", alt=pages.content_c.name)
+    if content_d_state=="public"
+      li
+        a(href=pages.content_d.url)
+          img(src=image_path+"/shared/nav_content_d_public.png" alt=pages.content_d.name)
+    else if content_d_state=="comingsoon"
+      li
+        img(src=image_path+"/shared/nav_content_d_comingsoon.png" alt=pages.content_d.name+" Coming Soon...")

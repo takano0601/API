@@ -1,0 +1,15 @@
+extends ./_pug/_layout
+
+block vars
+  include ./_pug/_config
+    - var key = "top"
+    - var page = pages[key]
+
+block contents
+  h2.holiday__title 祝日一覧
+  table.tableJs
+  
+  section.programJs#NHK
+    h2.programJs__head 今日のNHK歌番組
+  section.progGraph
+    h2.progGraph__hread Eテレ音楽番組数

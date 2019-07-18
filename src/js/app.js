@@ -1,8 +1,9 @@
 'use strict';
 import objectFitImages from 'object-fit-images';
 import MicroModal from 'micromodal';
-import console from './modules/console';
-
+// import console from './modules/console';
+import {NHKpass} from './modules/config.js';
+import fetchFun from './modules/fetch.js'
 
 
 var tableJs = document.querySelector('.tableJs');
@@ -11,18 +12,21 @@ var holiday = document.getElementById('holiday');
 // http://api.e-stat.go.jp/rest/2.1/app/json/getStatsList?appId=+7df9336aa4b63e9a82654cde526e6958d5ed8626&lang=J&openYears=201801-201907&statsCode=00130001&searchKind=1
 
 //祝日一覧API
-fetch("https://holidays-jp.github.io/api/v1/date.json")
-.then(response=>{
-    if(response.ok){
-        return response.text();
-    }else{
-        return Promise.reject(new Error('エラーです'));
-    }
-})
-.then(response =>{
-    const objRes = JSON.parse(response);
-    createTable(objRes);
-});
+// fetch("https://holidays-jp.github.io/api/v1/date.json")
+// .then(response=>{
+//     if(response.ok){
+//         return response.text();
+//     }else{
+//         return Promise.reject(new Error('エラーです'));
+//     }
+// })
+// .then(response =>{
+//     const objRes = JSON.parse(response);
+//     createTable(objRes);
+// });
+let fetchPromiss = fetchFun("https://holidays-jp.github.io/api/v1/date.json");
+console.log(fetchPromiss);
+createTable(fetchPromiss);
 
 function createTable(objData){
     Object.keys(objData).forEach(function(key){
@@ -41,7 +45,6 @@ function conversion(key){
 }
 
 // NHK 歌番組
-import {NHKpass} from './modules/password.js';
 let today =  new Date();
 var mm = ('0' + (today.getMonth() + 1)).slice(-2);   //月
 var dd = ('0' + today.getDate()).slice(-2);          //日
@@ -82,12 +85,12 @@ function progDisplay(list){
 }
 
 //音楽番組数をグラフ化
-fetch("http://api.nhk.or.jp/v2/pg/genre/400/e1/0409/2019-07-17.json?key=" + NHKpass)
+fetch("http://api.nhk.or.jp/v2/pg/genre/400/e1/0409/2019-07-18.json?key=" + NHKpass)
 .then(res =>{
     if(res.ok){
-      return res.text();
+        return res.text();
     }else{
-      return Promise.resject(new Error('エラーです'));
+        return Promise.resject(new Error('エラーです'));
     }
 })
 .then(res =>{

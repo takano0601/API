@@ -3,42 +3,35 @@ import objectFitImages from 'object-fit-images';
 import MicroModal from 'micromodal';
 // import console from './modules/console';
 import {NHKpass} from './modules/config.js';
-import fetchFun from './modules/fetch.js'
+import Fetches from './modules/fetch.js';
 
+import moment from 'moment';
+import 'moment/locale/ja';
+moment.locale('ja');
 
+const fetches = new Fetches();
 var tableJs = document.querySelector('.tableJs');
 var tableInner = "";
-// http://api.e-stat.go.jp/rest/2.1/app/json/getStatsList?appId=+7df9336aa4b63e9a82654cde526e6958d5ed8626&lang=J&openYears=201801-201907&statsCode=00130001&searchKind=1
 
 //祝日一覧API
-fetchFun("https://holidays-jp.github.io/api/v1/date.json")
+fetches.fetchFun("https://holidays-jp.github.io/api/v1/date.json")
 .then(response =>{
     createTable(response);
 });
 
 function createTable(objData){
     Object.keys(objData).forEach(function(key){
-        const getKey = conversion(key);
+        const getKey = moment(key).format('YYYY年MM月DD日');
         tableInner += '<tr><th class="trJs">' + getKey + '</th>';
         tableInner += '<td class="tdJs">' + objData[key] + '</td></tr>';
     });
     tableJs.innerHTML += tableInner;
 }
 
-//2018-01-01　→2018年01月01日　に変換
-function conversion(key){
-    let cgKey = key.replace('-','年').replace('-','月');
-    cgKey += '日';
-    return cgKey;
-}
-
 // NHK 歌番組
-let today =  new Date();
-var mm = ('0' + (today.getMonth() + 1)).slice(-2);   //月
-var dd = ('0' + today.getDate()).slice(-2);          //日
-today = `${today.getFullYear()}-${mm}-${dd}`; //今日の日付
 
-fetchFun("http://api.nhk.or.jp/v2/pg/genre/400/g1/0409/" + today + ".json?key=" + NHKpass)
+
+fetches.fetchNHK()
 .then(response =>{
     let programList = response.list.g1;
     progDisplay(programList);
@@ -56,27 +49,19 @@ function progDisplay(list){
         NHKdisplay.appendChild(title);
 
         //スタート時間
-        const startDate = new Date(item.start_time);
+        const startDate = moment(item.start_time);
         const dateElement = document.createElement('p');
         dateElement.className = 'dateNHK';
-        dateElement.innerText = startDate.getHours() + '時' + startDate.getMinutes() + '分スタート！';
+        dateElement.innerText = startDate.format('HH時mm分スタート！');
         NHKdisplay.appendChild(dateElement);
     });
 }
 
-//音楽番組数をグラフ化
-fetch("http://api.nhk.or.jp/v2/pg/genre/400/e1/0409/2019-07-23.json?key=" + NHKpass)
-.then(res =>{
-    if(res.ok){
-        return res.text();
-    }else{
-        return Promise.resject(new Error('エラーです'));
-    }
-})
-.then(res =>{
-    const objRes = JSON.parse(res);
-    console.log(objRes);    //???
-    // let progNum = objRes.
-});
 
-console.log(momnet('2019-12-12'));
+
+//音楽番組数をグラフ化
+fetches.fetchNHK(1)
+.then(response=>{
+    console.log(response);
+})
+

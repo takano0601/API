@@ -166,7 +166,9 @@ const app = (env, argv) => {
         ],
       },
       devtool: sourceMap,
-      plugins: [],
+      plugins: [
+        new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+      ],
     },
     {
       //pug

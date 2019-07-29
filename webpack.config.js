@@ -160,7 +160,15 @@ const app = (env, argv) => {
             exclude: /node_modules/, // ローダーの処理対象から外すディレクトリ
             loader: 'babel-loader', // 利用するローダー
             query: {
-              presets: ['@babel/preset-env'],
+              "presets": [
+                [
+                  "@babel/preset-env", {
+                    "targets": {
+                      "node": "current"
+                    }
+                  }
+                ]
+              ],
             },
           },
         ],
